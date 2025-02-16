@@ -1,0 +1,122 @@
+Eu usei o código no colab! ⋆
+Recomendo que voce separe conforme os comentários em cada celula (para evitar de, por exemplo, 
+importar as bibliotecas de novo). ⋆𐙚₊˚⊹♡
+Segue a explicação detalhada sobre o código para tentar sanar possíveis dúvidas:
+
+🛠️ O que esse código faz?
+Pesquisa dois termos no Google Trends (no caso, "Inteligência Artificial" e "Machine Learning").
+Cria três gráficos:
+  1- Um mostrando a tendência de cada termo separadamente.
+  2- Um comparando os dois no mesmo gráfico.
+  3- Salva os dados em arquivos CSV para você poder analisar depois.
+
+
+📝 Passo a passo do código:
+
+1- DEFINIÇÃO DOS TERMOS DE BUSCA:
+
+  termo_1 = "Inteligência artificial"
+  termo_2 = "Machine Learning"
+
+  Aqui a gente escolhe dois termos para pesquisar no Google Trends. 
+  Você pode trocar esses termos por qualquer outro assunto que quiser analisar.
+
+2- CONFIGURAÇÃO E BUSCA DE DADOS:
+
+  pytrends.build_payload([termo_1], cat=0, timeframe='today 3-m', geo='BR', gprop='')
+  dados_1 = pytrends.interest_over_time()
+  if 'isPartial' in dados_1.columns:
+      dados_1 = dados_1.drop(columns=['isPartial'])
+
+  Isso aqui faz a consulta no Google Trends e 
+  retorna um DataFrame (uma tabela do Pandas) com os dados da pesquisa para o primeiro termo.
+
+  "build_payload()" → Monta a requisição para o Google Trends.
+  "interest_over_time()" → Obtém os dados de tendência ao longo do tempo.
+  "isPartial" → O Google Trends às vezes marca os últimos dados como "parciais" (incompletos), 
+  então esse código remove essa coluna se existir.
+
+  build_payload() → Monta a consulta ao Google Trends com esses parâmetros:
+  cat=0 → Categoria geral (não filtra por assunto específico).
+  timeframe='today 3-m' → Últimos 3 meses de dados.
+  geo='BR' → Apenas buscas feitas no Brasil.
+  gprop='' → Pesquisa em todas as categorias do Google (não apenas em "notícias" ou "YouTube", por exemplo).
+
+  O mesmo processo se repete para o segundo termo:
+
+  pytrends.build_payload([termo_2], cat=0, timeframe='today 3-m', geo='BR', gprop='')
+  dados_2 = pytrends.interest_over_time()
+  if 'isPartial' in dados_2.columns:
+      dados_2 = dados_2.drop(columns=['isPartial'])
+
+  Agora temos duas tabelas:
+    📊 dados_1 → com as informações de "Inteligência Artificial".
+    📊 dados_2 → com as informações de "Machine Learning".
+
+3- CRIANDO OS GRAFICOS:
+  Agora vamos exibir os dados de forma visual!
+
+  Gráfico 1: Tendência do primeiro termo
+
+  plt.figure(figsize=(10,5))
+  dados_1[termo_1].plot(color='pink')
+  plt.xlabel('Data')
+  plt.ylabel('Interesse')
+  plt.title(f'Interesse por {termo_1} no Google Trends')
+  plt.xticks(rotation=45)
+  plt.show()
+
+  Isso cria um gráfico rosa mostrando como o interesse por "Inteligência Artificial" mudou nos últimos 3 meses.
+    #(Voce pode alterar a cor do grafico mudando o valor de " color='(cor)' ")#
+
+  Gráfico 2: Tendência do segundo termo
+
+  plt.figure(figsize=(10,5))
+  dados_2[termo_2].plot(color='lightblue')
+  plt.xlabel('Data')
+  plt.ylabel('Interesse')
+  plt.title(f'Interesse por {termo_2} no Google Trends')
+  plt.xticks(rotation=45)
+  plt.show()
+
+  Esse aqui faz a mesma coisa, mas agora para "Machine Learning", e a cor do gráfico é azul claro.
+
+  Gráfico 3: Comparação dos dois termos
+
+  plt.figure(figsize=(10,5))
+  dados_1[termo_1].plot(label=termo_1, color='pink')
+  dados_2[termo_2].plot(label=termo_2, color='lightblue')
+  plt.xlabel('Data')
+  plt.ylabel('Interesse')
+  plt.title(f'Comparação entre {termo_1} e {termo_2} no Google Trends')
+  plt.legend()
+  plt.xticks(rotation=45)
+  plt.show()
+
+  Esse é o gráfico mais interessante:
+  coloca os dois termos juntos, para comparar diretamente qual deles tem mais busca ao longo do tempo.
+
+    1- A linha rosa representa "Inteligência Artificial".
+    2- A linha azul clara representa "Machine Learning".
+    3- plt.legend() adiciona uma legenda para facilitar a identificação.
+
+4- SALVANDO OS DADOS EM CSV:
+  Agora que temos os dados, vamos salvar tudo em arquivos CSV para análise futura.
+
+  dados_1.to_csv(f'tendencias_{termo_1.replace(" ", "_")}.csv')
+  dados_2.to_csv(f'tendencias_{termo_2.replace(" ", "_")}.csv')
+
+  Isso salva os dados de cada termo em arquivos CSV separados, com nomes baseados nos termos pesquisados.
+  Por exemplo:
+    "Inteligência Artificial" vai gerar um arquivo chamado tendencias_Inteligência_Artificial.csv
+    "Machine Learning" vai gerar tendencias_Machine_Learning.csv
+
+Espero ter sido útil! 
+Obrigada pela ateção ♡‧₊˚
+
+
+♡ ∩_∩ 
+(„• ֊ •„)♡
+|￣U U￣￣￣￣￣￣￣￣￣|
+|  Malu               |   
+ ￣￣￣￣￣￣￣￣￣￣￣￣
