@@ -1,0 +1,58 @@
+# Instalar biblioteca para Google Trends
+!pip install pytrends
+
+# Importar bibliotecas
+import pandas as pd
+import matplotlib.pyplot as plt
+from pytrends.request import TrendReq
+
+# Configurar pytrends
+pytrends = TrendReq(hl='pt-BR', tz=0)
+
+# Definir os termos de busca
+termo_1 = "Inteligência artificial"
+termo_2 = "Machine Learning"
+
+# Consultar os dados para os dois termos
+pytrends.build_payload([termo_1], cat=0, timeframe='today 3-m', geo='BR', gprop='')
+dados_1 = pytrends.interest_over_time()
+if 'isPartial' in dados_1.columns:
+    dados_1 = dados_1.drop(columns=['isPartial'])
+
+pytrends.build_payload([termo_2], cat=0, timeframe='today 3-m', geo='BR', gprop='')
+dados_2 = pytrends.interest_over_time()
+if 'isPartial' in dados_2.columns:
+    dados_2 = dados_2.drop(columns=['isPartial'])
+
+# Exibir gráfico para o primeiro termo
+plt.figure(figsize=(10,5))
+dados_1[termo_1].plot(color='pink')
+plt.xlabel('Data')
+plt.ylabel('Interesse')
+plt.title(f'Interesse por {termo_1} no Google Trends')
+plt.xticks(rotation=45)
+plt.show()
+
+# Exibir gráfico para o segundo termo
+plt.figure(figsize=(10,5))
+dados_2[termo_2].plot(color='lightblue')
+plt.xlabel('Data')
+plt.ylabel('Interesse')
+plt.title(f'Interesse por {termo_2} no Google Trends')
+plt.xticks(rotation=45)
+plt.show()
+
+# Exibir gráfico comparativo entre os dois termos
+plt.figure(figsize=(10,5))
+dados_1[termo_1].plot(label=termo_1, color='pink')
+dados_2[termo_2].plot(label=termo_2, color='lightblue')
+plt.xlabel('Data')
+plt.ylabel('Interesse')
+plt.title(f'Comparação entre {termo_1} e {termo_2} no Google Trends')
+plt.legend()
+plt.xticks(rotation=45)
+plt.show()
+
+# Salvar os dados em arquivos CSV
+dados_1.to_csv(f'tendencias_{termo_1.replace(" ", "_")}.csv')
+dados_2.to_csv(f'tendencias_{termo_2.replace(" ", "_")}.csv')
